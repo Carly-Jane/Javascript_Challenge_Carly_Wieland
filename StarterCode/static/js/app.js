@@ -10,6 +10,42 @@ var tableData = data;
 //     durationMinutes: "5 mins.",
 //     comments: "4 bright green circles high in the sky going in circles then one bright green light at my front door."
 //   },
+console.log(tableData)
+window.onload = printTable('#ufo-table');
+
+function addAllColumnHeaders(tableData, selector) {
+  var columnSet = [];
+  var headerTr$ = $('<tr/>');
+
+  for (var i = 0; i < tabledata.length; i++) {
+    var rowHash = tableData[i];
+    for (var key in rowHash) {
+      if ($.inArray(key, columnSet) == -1) {
+        columnSet.push(key);
+        headerTr$.append($('<th/>').html(key));
+      }
+    }
+  }
+  $(selector).append(headerTr$);
+  return columnSet;
+}
+
+function printTable(tablename) {
+  var columns = addAllColumnHeaders(tableData, tablename)
+
+  for (var j = 0; j < tableData.length; j++) {
+    var row$ = $('<tr/>');
+    for (var colIndex = 0; colIndex < columns.length; colIndex++) {
+      var cellValue = tableData[i][columns[colIndex]];
+      if (cellValue == null) cellValue = "";
+      row$.append($('<td/>').html(cellValue));
+    }
+    $(selector).append(row$);
+  }
+
+};
+
+
 
 
 // Select the button
@@ -20,14 +56,14 @@ var form = d3.select("#form");
 
 // Create event handlers 
 button.on("click", runEnter);
-form.on("submit",runEnter);
+form.on("submit", runEnter);
 
 // Complete the event handler function for the form
 function runEnter() {
 
   // Prevent the page from refreshing
   d3.event.preventDefault();
-  
+
   // Select the input element and get the raw HTML node
   var inputElement = d3.select("#datetime");
 
