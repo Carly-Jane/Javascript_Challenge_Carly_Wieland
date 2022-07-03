@@ -1,106 +1,53 @@
-// Assign the data from `data.js` to a descriptive variable
+// from data.js
 var tableData = data;
+console.log(tableData);
 
-// var data = [{
-//     datetime: "1/1/2010",
-//     city: "benton",
-//     state: "ar",
-//     country: "us",
-//     shape: "circle",
-//     durationMinutes: "5 mins.",
-//     comments: "4 bright green circles high in the sky going in circles then one bright green light at my front door."
-//   },
-console.log(tableData)
-window.onload = printTable('#ufo-table');
+// YOUR CODE HERE!
+//Get a reference to the table body
+var tbody = d3.select("tbody");
 
-function addAllColumnHeaders(tableData, selector) {
-  var columnSet = [];
-  var headerTr$ = $('<tr/>');
+// Console.log the alien sighting data from data.js
+console.log(data);
 
-  for (var i = 0; i < tabledata.length; i++) {
-    var rowHash = tableData[i];
-    for (var key in rowHash) {
-      if ($.inArray(key, columnSet) == -1) {
-        columnSet.push(key);
-        headerTr$.append($('<th/>').html(key));
-      }
-    }
-  }
-  $(selector).append(headerTr$);
-  return columnSet;
-}
+// 03-Evr_D3_Table
+// Loop through data and console.log each alien sighting report object
+data.forEach(function (alienSighting) {
+  console.log(alienSighting);
+  // Use d3 to append one table row `tr` for each alien sighting report object
+  var row = tbody.append("tr");
+  // use Object.entries to console.log each alien sighting report value
+  Object.entries(alienSighting).forEach(function ([key, value]) {
+    console.log(key, value);
+    // Append a cell to the row for each value in the alien sighting report object
+    var cell = tbody.append("td");
+    cell.text(value);
+  });
+});
 
-function printTable(tablename) {
-  var columns = addAllColumnHeaders(tableData, tablename)
-
-  for (var j = 0; j < tableData.length; j++) {
-    var row$ = $('<tr/>');
-    for (var colIndex = 0; colIndex < columns.length; colIndex++) {
-      var cellValue = tableData[i][columns[colIndex]];
-      if (cellValue == null) cellValue = "";
-      row$.append($('<td/>').html(cellValue));
-    }
-    $(selector).append(row$);
-  }
-
-};
-
-
-
-
-// Select the button
-var button = d3.select("#button");
-
-// Select the form
-var form = d3.select("#form");
-
-// Create event handlers 
-button.on("click", runEnter);
-form.on("submit", runEnter);
-
-// Complete the event handler function for the form
-function runEnter() {
-
-  // Prevent the page from refreshing
+// html id changed to id="submit" section
+// 09-Par_Form_Filter
+// Select the submit button
+var submit = d3.select("#submit");
+// Use D3 `.on` to attach a click handler
+submit.on("click", function () {
+  // Prevent page from refreshing
   d3.event.preventDefault();
+  d3.select(".summary").html("");
 
   // Select the input element and get the raw HTML node
+  // Get the value property of the input element #datetime
   var inputElement = d3.select("#datetime");
-
-
-  // Get the value property of the input element
   var inputValue = inputElement.property("value");
 
-  console.log(inputValue);
-  console.log(tableData);
+  // Use the form input to filter the data by blood type
+  var filteredData = tableData.filter(tableData => tableData.datetime === inputValue);
 
-  var filteredData = tableData.filter(sighting => sighting.datetime === inputValue);
-
-  console.log(filteredData);
-};
-
-//   // BONUS: Calculate summary statistics for the age field of the filtered data
-
-//   // First, create an array with just the age values
-//   var ages = filteredData.map(person => person.age);
-
-//   // Next, use math.js to calculate the mean, median, mode, var, and std of the ages
-//   var mean = math.mean(ages);
-//   var median = math.median(ages);
-//   var mode = math.mode(ages);
-//   var variance = math.variance(ages);
-//   var standardDeviation = math.std(ages);
-
-//   // Then, select the unordered list element by class name
-//   var list = d3.select(".summary");
-
-//   // remove any children from the list to
-//   list.html("");
-
-//   // append stats to the list
-//   list.append("li").text(`Mean: ${mean}`);
-//   list.append("li").text(`Median: ${median}`);
-//   list.append("li").text(`Mode: ${mode}`);
-//   list.append("li").text(`Variance: ${variance}`);
-//   list.append("li").text(`Standard Deviation: ${standardDeviation}`);
-//
+  // loop - see above 03-Evr_D3_Table
+  filteredData.forEach((datetime) => {
+    var row = tbody.append("tr");
+    Object.entries(datetime).forEach(([key, value]) => {
+      var cell = tbody.append("td");
+      cell.text(value);
+    });
+  });
+});
